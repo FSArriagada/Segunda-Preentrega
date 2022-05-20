@@ -1,27 +1,4 @@
 
-/*
-class Carro {
-    constructor(total){
-        this.telefonos = []
-        this.total = total
-    }
-    agregarAlCarro (celular){
-        this.telefonos.push(celular)
-        this.total += celular.precio
-    }
-    
-    MostrarCarro(){
-        this.telefonos.forEach(listado => {
-            console.log(listado);
-        });
-    }
-}
-
-
-const carro = new Carro(0);*/
-
-
-
 const divCelulares = document.getElementById("divCelulares")
 const tablaCarrito = document.getElementById("tablaCarrito")
 const totalCarrito = document.getElementById("totalCarrito")
