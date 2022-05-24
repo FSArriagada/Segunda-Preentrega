@@ -3,6 +3,12 @@ const divCelulares = document.getElementById("divCelulares")
 const tablaCarrito = document.getElementById("tablaCarrito")
 const totalCarrito = document.getElementById("totalCarrito")
 
+document.addEventListener('DOMContentLoaded', () => {
+    mostrarCarrito()
+    mostrarTotalCarrito()
+    mostrarProductos(telefonos)
+    console.log('DOM fully loaded and parsed');
+});
 
 function mostrarProductos(telefonos){
     divCelulares.innerHTML=""
@@ -36,10 +42,14 @@ function mostrarCarrito() {
             </td>
             <td data-th="Precio">${element.precio}</td>
             <td data-th="Cantidad">
-                <p class="form-control text-center">${element.cantidad}</p>
+                <div class="column d-flex align-items-center">
+                    <button class="btn btn-sm" onclick="restarCant(${element.id})"><i class="fa-solid fa-square-minus"></i></button>
+                    <p class="form-control text-center mb-0">${element.cantidad}</p>
+                    <button class="btn btn-sm" onclick="incrementarCant(${element.id})"><i class="fa-solid fa-square-plus"></i></button>
+                </div>
             </td>
             <td data-th="Subtotal" class="text-center">${element.precio * element.cantidad}</td>
-            <td><button onclick="eliminarProductoCarrito(${element.id})" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i></button></td>
+            <td><button onclick="eliminarProductoCarrito(${element.id})" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can"></i></button></td>
         </tr>
         `
     });
@@ -73,7 +83,22 @@ function incrementarCant(id) {
     const indice = carrito.findIndex(celular => celular.id==id)
     carrito[indice].cantidad++
     guardarStorage(carrito)
+    mostrarCarrito()
+    mostrarTotalCarrito()
 }
+
+function restarCant(id) {
+    let carrito = capturarStorage();
+    const index = carrito.findIndex((e) => e.id == id); // busco la posicion del objeto
+    if (carrito[index].cantidad > 1) {
+      carrito[index].cantidad--; //segun la posicion le resto uno a cantidad
+      guardarStorage(carrito);
+      mostrarCarrito();
+      mostrarTotalCarrito();
+    } else {
+      carrito = confirm(`desea eliminar ${carrito[index].marca} ${carrito[index].modelo} del carrito de compras`) && eliminarProductoCarrito(id);
+    }
+  }
 
 function estaEnCarrito(id){
     let carrito = capturarStorage()
@@ -82,6 +107,7 @@ function estaEnCarrito(id){
 
 function eliminarProductoCarrito(id) {
     let carrito = capturarStorage()
+    //filtramos y hacemos que nos devuelva todo menos el id buscado
     let resultado = carrito.filter(celular => celular.id != id)
     guardarStorage(resultado)
     console.log(resultado)
@@ -100,6 +126,3 @@ function mostrarTotalCarrito() {
   }
 
 
-mostrarCarrito()
-mostrarProductos(telefonos)
-mostrarTotalCarrito()

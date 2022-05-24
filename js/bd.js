@@ -1,5 +1,3 @@
-
-console.log("bd.js")
 const telefonos = [
     {
         id: "1",
