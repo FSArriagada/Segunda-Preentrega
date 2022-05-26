@@ -19,7 +19,7 @@ function mostrarProductos(telefonos){
             <div class="card-body">
                 <h5 class="card-title">${celular.marca} ${celular.modelo}</h5>
                 <p class="card-text">$ ${celular.precio}</p>
-                <button onclick="agregarAlCarrito(${celular.id})" class="btn btn-success">Comprar</button>
+                <button onclick="agregarAlCarrito(${celular.id})" id="botonAgregar${celular.id}" class="btn btn-success">Agregar al Carrito</button>
             </div>
         </div>
         `
@@ -96,9 +96,22 @@ function restarCant(id) {
       mostrarCarrito();
       mostrarTotalCarrito();
     } else {
-      carrito = confirm(`desea eliminar ${carrito[index].marca} ${carrito[index].modelo} del carrito de compras`) && eliminarProductoCarrito(id);
-    }
-  }
+        Swal.fire({
+            title: `¿Desea eliminar ${carrito[index].marca} ${carrito[index].modelo} del carrito de compras?`,
+            icon: 'question',
+            confirmButtonText: 'Si',
+            cancelButtonText: 'No',
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                carrito = Swal.getConfirmButton() && eliminarProductoCarrito(id)
+                Swal.fire(
+                    'Su producto fue eliminado correctamente',
+                )
+            }
+        }
+    )}
+}
 
 function estaEnCarrito(id){
     let carrito = capturarStorage()
@@ -123,6 +136,31 @@ function mostrarTotalCarrito() {
       (acc, element) => acc + element.cantidad * element.precio,0
     );
     totalCarrito.innerHTML = total;
-  }
+}
+
+botonPedidoRealizado.addEventListener('click', () => {
+    if (estaVacio()) {
+        Swal.fire({
+            icon: 'error',
+            title: 'El carrito esta vacío',
+            text: 'Agrega al menos un producto para realizar un pedido',
+        }) 
+    } else {
+        Swal.fire({
+            icon: 'success',
+            title: 'Pedido realizado con éxito',
+            confirmButtonText: 'Aceptar',
+        })
+    }
+})
+
+function estaVacio() {
+    if (capturarStorage() == "") {
+        return true
+    } else {
+        return false
+    }
+}
+
 
 
